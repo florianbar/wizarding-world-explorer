@@ -73,7 +73,7 @@ export const useHousesStore = defineStore('houses', () => {
   });
 
   return {
-    houses: houses,
+    houses,
     isLoading,
     error,
     filterQuery,
