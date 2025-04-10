@@ -60,6 +60,13 @@ onMounted(() => {
             <p>Founder: {{ store.selectedHouse.founder }}</p>
             <p>House Points: {{ store.housesPoints?.[store.selectedHouse.id] }}</p>
 
+            <h4 class="text-lg font-semibold mt-2">Notable Members</h4>
+            <ul>
+              <li v-for="(head, index) in store.selectedHouse.heads" :key="index">
+                {{ head.firstName }} {{ head.lastName }}
+              </li>
+            </ul>
+
             <h4 class="text-lg font-semibold mt-2">Additional Information</h4>
             <p>Mascot: {{ store.selectedHouse.animal }}</p>
 
