@@ -30,18 +30,8 @@ export const useHousesStore = defineStore('houses', () => {
 
   const selectedHouse = ref<House | null>(null);
   const housesPoints = ref<HousePoints>({});
-
-  watch(() => houses.value, (houses) => {
-    if (houses) {
-      const points: HousePoints = { ...housesPoints.value };
-      houses.forEach((house: House) => {
-        if (!(house.id in points)) {
-          points[house.id] = 0;
-        }
-      });
-      housesPoints.value = points;
-    }
-  }, { immediate: true });
+  const filteredHouses = ref<House[]>([]);
+  const filterQuery = ref("");
 
   function incrementHousePoints(houseId: string, amount = 10) {
     if (houseId in housesPoints.value) {
@@ -53,10 +43,41 @@ export const useHousesStore = defineStore('houses', () => {
     selectedHouse.value = house;
   }
 
+  watch(() => houses.value, (houses) => {
+    if (houses) {
+      // Initialize filtered houses
+      filteredHouses.value = houses;
+
+      // Initialize house points
+      const points: HousePoints = { ...housesPoints.value };
+      houses.forEach((house: House) => {
+        if (!(house.id in points)) {
+          points[house.id] = 0;
+        }
+      });
+      housesPoints.value = points;
+    }
+  }, { immediate: true });
+
+  watch(() => filterQuery.value, (query) => {
+    if (query.length === 0) {
+      filteredHouses.value = houses.value || [];
+      return;
+    }
+
+    if (houses.value) {
+      filteredHouses.value = houses.value.filter((house: House) =>
+        house.name.toLowerCase().includes(query.toLowerCase())
+      );
+    }
+  });
+
   return {
     houses: houses,
     isLoading,
     error,
+    filterQuery,
+    filteredHouses,
     selectedHouse,
     selectHouse,
     housesPoints,

@@ -4,6 +4,7 @@ import Card from 'primevue/card'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Button from 'primevue/button'
+import InputText from 'primevue/inputtext'
 
 import { useHousesStore } from '../stores/houses'
 import type { House } from '../types/house'
@@ -20,13 +21,15 @@ onMounted(() => {
     <Card class="mb-4">
       <template #title>Houses</template>
       <template #content>
+        <InputText id="name-filter" v-model="store.filterQuery" />
+
         <p class="mb-4">Explore the different houses of the wizarding world.</p>
 
         <div v-if="store.isLoading" class="flex justify-center py-4">Loading houses...</div>
         <div v-else-if="store.error" class="text-red-500">An error occurred while loading houses.</div>
         <div v-else>
           <DataTable
-            :value="store.houses"
+            :value="store.filteredHouses"
             stripedRows
             paginator
             :rows="10"
